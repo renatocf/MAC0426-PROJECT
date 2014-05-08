@@ -16,34 +16,3 @@
 # limitations under the License.                                       #
 #                                                                      #
 ########################################################################
-
-MODELO PARA JOGOS
-===================
-    
-                                     .----------.
-                                     | PRODUCER |
-                                     '----------'
-                                         N|
-                                          |
-                                         /\ rel_produces
-                  rel_owns               \/
-        .-----|~|---/\----------------.   |
-        |           \/                |   |
-        |M                           N|  M|
-    .--------.                     .--------.N 
-    |  USER  |                     |  GAME  |
-    '--------'                     '--------'  
-       M|                              N|      
-        | (restrição)    (restrição)    |      
-        | Deve possuir   Todos devem    |      
-        |  algum jogo    ter o jogo     |      
-        |                          .----:-----.
-        |      N.--------.M        |    |     |  
-       /\--|~|--|  TEAM  |--|~|----:----/\    |
-       \/       '--------'         |    \/    |
-    rel_participate  |1            | rel_play |
-                     |             '----------'
-                     |              N| MATCH
-                     '------/\-------'
-                            \/ 
-                         rel_wins
