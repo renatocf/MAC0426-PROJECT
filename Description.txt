@@ -1,0 +1,36 @@
+############################################
+#                                          #
+#  MAC0426   - Sistemas de Banco de Dados  #
+#  IME-USP   - Primeiro Semestre de 2014   #
+#  Turma 45  - João Eduardo Ferreira       #
+#                                          #
+#  Evandro Augusto Nunes Sanches  5388861  #
+#  Renato Cordeiro Ferreira       7990933  #
+#                                          #
+############################################
+
+Plataforma web de comercialização e uso de jogos
+==================================================
+
+  Pretende-se criar uma plataforma web que sirva para conectar empresas
+produtoras  de jogos com possíveis clientes.  Ao mesmo tempo, servir de
+base para interação entre os jogadores ao utilizar esses produtos.
+  Os produtores são as empresas  responsáveis por disponibilizar jogos.
+Um usuário da  plataforma é um cliente  que compra e tem acesso a esses 
+jogos.  Esses jogadores são  organizados  em times,  que podem disputar 
+partidas. Cada jogo é um dos softwares vendidos pela plataforma.
+  Deseja-se criar  um banco de dados  que contenha  as informações  dos
+produtores  {nome, CNPJ}, usuários  {nome,  apelido,  número do cartão,
+senha},  jogos  {nome,  preço,  descrição},  times  {nome}  e  partidas 
+{data de início, data de fim}.
+  Diferentes produtoras disponibilizam vários jogos.  Cada usuário pode
+comprar  esses jogos e  participar  de times.  Um time joga  certo jogo 
+quando  se lhe associa  por meio da plataforma,  podendo  se vincular a
+vários  deles.  Esse time  pode,  então,  disputar partidas,  cada  uma 
+pertencente a um único jogo.  Nelas, sempre há pelo menos um time,  mas
+somente um ganhador. 
+  Um usuário  só poderá estar  num time se  possuir os jogos que aquele
+time joga.  Uma partida deverá ser disputada apenas por times que estão
+associados  ao jogo  do qual  ela pertence.  Por fim,  um time  só pode 
+ganhar uma partida que disputou.
+

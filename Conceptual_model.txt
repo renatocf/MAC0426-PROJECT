@@ -1,0 +1,42 @@
+MODELO PARA JOGOS
+===================
+    
+                                   .----------.
+                                   | PRODUCER |
+                                   '----------'
+                                       N| |- name
+                                        | '- CNPJ
+                                        |
+                                        /\ rel_produces
+                  rel_owns              \/
+        .-----|~|---/\--------------.   |
+        |           \/              |   |
+        |M                         N|  M|                        
+    .--------.                   .--------.1          N.-------.
+    |  USER  |                   |  GAME  |-----/\-----| MATCH |-.
+    '--------'                   '--------'     \/     '-------' |- dat_ini
+       M| |- name                    N|      rel_has     N|  |M  |- dat_fim
+        | |- "nickname"               |                   |  |   '- "id_match"
+        | |- card_num                 |                   |  |
+        | '- password                 |                   |  |
+        |                             |                   |  |
+        | (restrição)     (restrição) |                   |  |   
+        | Deve possuir    Todos devem |                   |  |
+        |  algum jogo     ter o jogo  |                   |  |
+        |                             |      rel_dispute /\ /\ rel_wins 
+        |                             |                  \/ \/ 
+        |        .- name              |                   |  |
+        |      N.--------.M           |                   |  |
+       /\--|~|--|  TEAM  |----|~|----/\                   |  |
+       \/       '--------'           \/                   |  |
+    rel_participate  |1 |M        rel_play                |  |
+                     |  |                                 |  |
+                     |  '-----------------|~|-------------'  |
+                     |                (restrição)            |
+                     |          Só disputa a partida se      |
+                     |          é um time que joga o jogo    |
+                     |                                       |
+                     '--------------------|~|----------------'
+                                      (restrição)
+                                    Só pode ganhar uma
+                                partida disputada por ele
