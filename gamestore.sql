@@ -1,4 +1,6 @@
-CREATE TABLE user
+USE renatocf;
+
+CREATE TABLE gamer
 (
     name     varchar(255),
     nickname varchar(10),
@@ -28,54 +30,67 @@ CREATE TABLE distributor
     PRIMARY KEY(cnpj)
 );
 
-CREATE TABLE match
+CREATE TABLE challenge
 (
-    id_match BIGINT UNSIGNED,
-    FOREIGN KEY(title)
-        REFERENCES game(title),
+    idChallenge BIGINT UNSIGNED,   
+    title varchar(40),
     dat_beg  datetime,
     dat_end  datetime,
+    name varchar(40),
+    FOREIGN KEY(title)
+        REFERENCES game(title),
     FOREIGN KEY(name)
         REFERENCES team(name),
-    PRIMARY KEY(name,id_match)
+    PRIMARY KEY(name,idChallenge)
 );
 
 CREATE TABLE rel_distribute
 (
-    FOREIGN_KEY(cnpj)
+    cnpj int unsigned,
+    title varchar(40),
+    FOREIGN KEY(cnpj)
         REFERENCES distributor(cnpj),
-    FOREIGN_KEY(title)
+    FOREIGN KEY(title)
         REFERENCES game(title)
 );
 
 CREATE TABLE rel_owns
 (
-    FOREIGN_KEY(nickname)
-        REFERENCES user(nickname),
-    FOREIGN_KEY(title)
+    nickname varchar(10),
+    title varchar(40),
+    FOREIGN KEY(nickname)
+        REFERENCES gamer(nickname),
+    FOREIGN KEY(title)
         REFERENCES game(title)
 );
 
 CREATE TABLE rel_participate
 (
-    FOREIGN_KEY(nickname)
-        REFERENCES user(nickname),
-    FOREIGN_KEY(name)
+    nickname varchar(10),
+    teamName varchar(40),
+    FOREIGN KEY(nickname)
+        REFERENCES gamer(nickname),
+    FOREIGN KEY(teamName)
         REFERENCES team(name)
 );
 
 CREATE TABLE rel_play
 (
-    FOREIGN_KEY(name)
+    teamName varchar(40),
+    gameTitle varchar(40),
+    FOREIGN KEY(teamName)
         REFERENCES team(name),
-    FOREIGN_KEY(title)
+    FOREIGN KEY(gameTitle)
         REFERENCES game(title)
 );
 
 CREATE TABLE rel_dispute
 (
-    FOREIGN_KEY(name)
+    teamName varchar(40),
+    gameTitle varchar(40),
+    idChallenge varchar(40),    
+    FOREIGN KEY(teamName)
         REFERENCES team(name),
-    FOREIGN_KEY(title,id_match)
-        REFERENCES match(title,id_match)
+    FOREIGN KEY(gameTitle,idChallenge)
+        REFERENCES challenge(title,idChallenge)
 );
