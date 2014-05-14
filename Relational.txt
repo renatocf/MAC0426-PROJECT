@@ -1,0 +1,128 @@
+########################################################################
+##                              PASSO 1                               ##
+########################################################################
+
+USER
+| NAME | NICKNAME | CARD_NUM | PASSWORD |
+         ^^^^^^^^
+TEAM
+| NAME |
+  ^^^^  
+GAME
+| TITLE | VERSION |
+  ^^^^^
+DISTRIBUTOR
+| NAME | FANTASY | CNPJ |
+                   ^^^^
+########################################################################
+##                              PASSO 2                               ##
+########################################################################
+
+USER
+| NAME | NICKNAME | CARD_NUM | PASSWORD |
+         ^^^^^^^^
+TEAM
+| NAME |
+  ^^^^  
+GAME
+| TITLE | VERSION |
+  ^^^^^
+DISTRIBUTOR
+| NAME | FANTASY | CNPJ |
+                   ^^^^
+MATCH
+   fk
+| TITLE | ID_MATCH | DAT_BEG | DAT_END |
+  ^^^^^   ^^^^^^^^
+
+########################################################################
+##                              PASSO 3                               ##
+########################################################################
+
+USER
+| NAME | NICKNAME | CARD_NUM | PASSWORD |
+         ^^^^^^^^
+TEAM
+| NAME |
+  ^^^^  
+GAME
+| TITLE | VERSION |
+  ^^^^^
+DISTRIBUTOR
+| NAME | FANTASY | CNPJ |
+                   ^^^^
+MATCH
+   fk
+| TITLE | ID_MATCH | DAT_BEG | DAT_END |
+  ^^^^^   ^^^^^^^^
+
+rel_distributes
+   fk      fk
+| CNPJ | TITLE |
+  ^^^^   ^^^^^
+
+rel_owns
+     fk        fk
+| NICKNAME | TITLE |
+  ^^^^^^^^   ^^^^^
+
+rel_participate
+     fk       fk
+| NICKNAME | NAME |
+  ^^^^^^^^   ^^^^
+
+rel_play
+   fk     fk
+| NAME | TITLE |
+  ^^^^   ^^^^^
+
+rel_dispute
+   fk      fk       fk
+| NAME | TITLE | ID_MATCH |
+  ^^^^   ^^^^^   ^^^^^^^^
+
+########################################################################
+##                              PASSO 4                               ##
+########################################################################
+
+USER
+| NAME | NICKNAME | CARD_NUM | PASSWORD |
+         ^^^^^^^^
+TEAM
+| NAME |
+  ^^^^  
+GAME
+| TITLE | VERSION |
+  ^^^^^
+DISTRIBUTOR
+| NAME | FANTASY | CNPJ |
+                   ^^^^
+MATCH
+   fk                                     fk
+| TITLE | ID_MATCH | DAT_BEG | DAT_END | NAME |
+  ^^^^^   ^^^^^^^^
+
+rel_distributes
+   fk      fk
+| CNPJ | TITLE |
+  ^^^^   ^^^^^
+
+rel_owns
+     fk        fk
+| NICKNAME | TITLE |
+  ^^^^^^^^   ^^^^^
+
+rel_participate
+     fk       fk
+| NICKNAME | NAME |
+  ^^^^^^^^   ^^^^
+
+rel_play
+   fk     fk
+| NAME | TITLE |
+  ^^^^   ^^^^^
+
+rel_dispute
+   fk      fk       fk
+| NAME | TITLE | ID_MATCH |
+  ^^^^   ^^^^^   ^^^^^^^^ 
