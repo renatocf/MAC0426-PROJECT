@@ -28,27 +28,27 @@ MODEL FOR GAME WEB SYSTEM
                                       |
                                       /\ rel_distributes
                 rel_owns              \/
-      .-----|~|---/\--------------.   |
-      |           \/              |   |
-      |M                         N|  M|            ...........
+      .-----|~|---/\--------------.   ||
+      |           \/              |   ||
+      |M                         N|  M||           ...........
   .--------.                   .--------.1   /\   N|.-------.|
   |  USER  |                   |  GAME  |---//\\---|| MATCH ||.
   '--------'                   '--------'   \\//   |'-------'||- dat_ini
      M| |- name                    N|        \/    '''''''''''|- dat_fim
-      | |- "nickname"               |      rel_has    N|  |M  '- "id_match"
+      | |- "nickname"               |      rel_has    N|  |   '- "id_match"
       | |- card_num                 |                  |  |
       | '- password                 |                  |  |
       |                             |                  |  |
       | (restriction) (restriction) |                  |  |   
-      | Must own any  Everyone must |                  |  |
+      | Must own any  Everyone must |                  |  | (0,N)
       |     game      own the game  |                  |  |
       |                             |     rel_dispute /\ /\ rel_wins 
-      |                             |                 \/ \/ 
-      |        .- name              |                  |  |
+      |                             |                 \/ \/
+      |        .- name              |                  |  | (0,1)
       |      N.--------.M           |                  |  |
      /\--|~|--|  TEAM  |----|~|----/\                  |  |
      \/       '--------'           \/                  |  |
-  rel_participate  |1 |M        rel_play               |  |
+  rel_participate  |  |M        rel_play               |  |
                    |  |                                |  |
                    |  '-------------|~|----------------'  |
                    |           (restriction)              |
