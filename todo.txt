@@ -1,0 +1,6 @@
+Data da entrega: sexta-feira 30/05
+
+-incluir restrições no código de criação das relações(gamestore.sql)
+-gerar 3 consultas não triviais para o BD
+-trocar o nome da relação USER, pois da erro ao tentar popular o BD
+-talvez renomear todas as relações adotando um padrão único
