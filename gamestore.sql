@@ -71,7 +71,9 @@ CREATE TABLE rel_participate
     FOREIGN KEY(nickname)
         REFERENCES gamer(nickname),
     FOREIGN KEY(teamName)
-        REFERENCES team(name)
+        REFERENCES team(name),
+    CONSTRAINT own_any_game CHECK ( "para todo jogo em play" IN (SELECT "o jogo" FROM "rel_owns"))
+/*utilizei o exemplo desta página: "http://paginas.fe.up.pt/~jlopes/teach/2011-12/SIBD/foils/advanced_db/constraints.php". Mas precisamos fazer a busca correta, provavelmente com division*/
 );
 
 CREATE TABLE rel_play
@@ -89,6 +91,17 @@ CREATE TABLE rel_dispute
     teamName varchar(40),
     gameTitle varchar(40),
     idChallenge varchar(40),    
+    FOREIGN KEY(teamName)
+        REFERENCES team(name),
+    FOREIGN KEY(gameTitle,idChallenge)
+        REFERENCES challenge(title,idChallenge)
+);
+
+CREATE TABLE rel_win
+    teamName varchar(40),
+    gameTitle varchar(40),
+    idChallenge varchar(40),
+	victoryTeamName varchar(40),
     FOREIGN KEY(teamName)
         REFERENCES team(name),
     FOREIGN KEY(gameTitle,idChallenge)
