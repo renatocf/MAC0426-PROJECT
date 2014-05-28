@@ -1,4 +1,4 @@
-USE renatocf;
+USE evnsan;
 
 CREATE TABLE gamer
 (
@@ -72,8 +72,20 @@ CREATE TABLE rel_participate
         REFERENCES gamer(nickname),
     FOREIGN KEY(teamName)
         REFERENCES team(name),
-    CONSTRAINT own_any_game CHECK ( (nickname AS THIS.nick AND teamName AS THIS.team) IN ((SELECT OWN.title FROM rel_owns AS OWN WHERE OWN.nickname=THIS.nick) contains (SELECT gameTitle FROM rel_play AS PLAY WHERE PLAY.teamName=THIS.team)));
-/*utilizei o exemplo desta página: "http://paginas.fe.up.pt/~jlopes/teach/2011-12/SIBD/foils/advanced_db/constraints.php". Mas precisamos fazer a busca correta, provavelmente com division Cara inventei um bocado. não tenho ideia se funciona*/
+    CONSTRAINT own_any_game CHECK (
+        teamName NOT IN (
+            SELECT teamName
+            FROM rel_play AS PLAY
+            WHERE PLAY.teamName=teamName
+            AND PLAY.gameTitle NOT IN(
+                SELECT OWNS.title
+                FROM rel_owns AS OWNS
+                WHERE OWNS.nickname=nickname
+                )
+
+            )
+        )
+);
 
 CREATE TABLE rel_play
 (
@@ -97,6 +109,7 @@ CREATE TABLE rel_dispute
 );
 
 CREATE TABLE rel_win
+(
     teamName varchar(40),
     gameTitle varchar(40),
     idChallenge varchar(40),
