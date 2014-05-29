@@ -73,7 +73,7 @@ CREATE TABLE rel_participate
     FOREIGN KEY(teamName)
         REFERENCES team(name),
     CONSTRAINT own_any_game CHECK (
-        teamName NOT IN (
+        not teamName IN (
             SELECT teamName
             FROM rel_play AS PLAY
             WHERE PLAY.teamName=teamName
@@ -112,8 +112,7 @@ CREATE TABLE rel_win
 (
     teamName varchar(40),
     gameTitle varchar(40),
-    idChallenge varchar(40),
-	victoryTeamName varchar(40),
+    idChallenge BIGINT UNSIGNED,
     FOREIGN KEY(teamName)
         REFERENCES team(name),
     FOREIGN KEY(gameTitle,idChallenge)
