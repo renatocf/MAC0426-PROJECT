@@ -1,4 +1,4 @@
-SELECT DISTINCT PLAY.teamName FROM rel_play AS PLAY
+SELECT  PLAY.teamName FROM rel_play AS PLAY
             WHERE PLAY.teamName='team1'
             AND PLAY.gameTitle NOT IN(
                 SELECT OWNS.title

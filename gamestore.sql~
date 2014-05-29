@@ -152,7 +152,7 @@ CREATE TRIGGER restriction_participate
 BEFORE INSERT ON rel_participate FOR EACH ROW
 BEGIN
     IF NOT
-        (SELECT DISTINCT PLAY.teamName FROM rel_play AS PLAY
+        (SELECT PLAY.teamName FROM rel_play AS PLAY
             WHERE PLAY.teamName=NEW.teamName
             AND PLAY.gameTitle NOT IN(
                 SELECT OWNS.title
