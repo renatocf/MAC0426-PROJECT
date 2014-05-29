@@ -154,7 +154,7 @@ BEGIN
     IF NOT
         (SELECT PLAY.teamName FROM rel_play AS PLAY
             WHERE PLAY.teamName=NEW.teamName
-            AND PLAY.gameTitle NOT IN(
+            AND NOT PLAY.gameTitle IN(
                 SELECT OWNS.title
                 FROM rel_owns AS OWNS
                 WHERE OWNS.nickname=NEW.nickname
