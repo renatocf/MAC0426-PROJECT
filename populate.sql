@@ -13,8 +13,10 @@ INSERT INTO game(title, version) VALUES('game6','v01');
 INSERT INTO rel_owns(nickname, title) VALUES('the1', 'game1');
 INSERT INTO rel_owns(nickname, title) VALUES('the1', 'game2');
 INSERT INTO rel_owns(nickname, title) VALUES('the1', 'game3');
+INSERT INTO rel_owns(nickname, title) VALUES('the1', 'game4');
 
 INSERT INTO rel_owns(nickname, title) VALUES('the2', 'game1');
+INSERT INTO rel_owns(nickname, title) VALUES('the2', 'game2');
 INSERT INTO rel_owns(nickname, title) VALUES('the2', 'game3');
 
 
@@ -24,3 +26,7 @@ INSERT INTO rel_play(teamName, gameTitle) VALUES('team1', 'game3');
 INSERT INTO rel_participate(nickname,teamName) VALUES('the1', 'team1');
 INSERT INTO rel_participate(nickname,teamName) VALUES('the2', 'team1');
 INSERT INTO rel_participate(nickname,teamName) VALUES('the3', 'team1');
+
+
+INSERT INTO rel_play(teamName, gameTitle) VALUES('team1', 'game2');
+INSERT INTO rel_play(teamName, gameTitle) VALUES('team1', 'game4');

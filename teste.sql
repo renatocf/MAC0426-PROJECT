@@ -1,6 +1,12 @@
-SELECT DISTINCT PLAY.teamName FROM rel_play AS PLAY
-            WHERE PLAY.teamName='team1'
-            AND PLAY.gameTitle NOT IN(
-                SELECT OWNS.title
-                FROM rel_owns AS OWNS
-                WHERE OWNS.nickname='the3');
+SELECT DISTINCT HYPH.nickname 
+        FROM (SELECT PART.nickname,OWNS.title
+              FROM  rel_participate AS PART,rel_owns AS OWNS
+              WHERE PART.teamName='team1'
+                    AND OWNS.title='game4') AS HYPH
+        WHERE HYPH.nickname NOT IN 
+              (SELECT OWNS.nickname
+               FROM  rel_participate AS PART,rel_owns AS OWNS
+               WHERE PART.teamName='team1')
+               
+               
+

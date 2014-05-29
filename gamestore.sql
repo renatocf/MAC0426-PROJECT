@@ -124,24 +124,30 @@ DELIMITER $$
  * TRIGGER: restriction_play
  * Can only play a game if all players own it.
  */
-/*CREATE TRIGGER restriction_play
+CREATE TRIGGER restriction_play
 BEFORE INSERT ON rel_play FOR EACH ROW
 BEGIN
-    IF (SELECT HYPH.nickname 
-        FROM (SELECT PART.nickname,OWNS.title
-              FROM  rel_participate AS PART,rel_owns AS OWNS
-              WHERE PART.teamName=NEW.teamName
-                    AND OWNS.title=NEW.gametitle) AS HYPH
-        WHERE HYPH.nickname NOT IN 
-              (SELECT PART.nickname,OWNS.title
-               FROM  rel_participate AS PART,rel_owns AS OWNS
-               WHERE PART.teamName=NEW.teamName)
+    IF EXISTS(
+        SELECT A.nickname
+        FROM rel_participate AS A
+        WHERE A.nickname NOT IN(
+            SELECT A.nickname
+            FROM rel_participate AS A
+            WHERE A.nickname NOT IN(
+                SELECT DESQ.nickname
+                FROM rel_participate AS DESQ
+                WHERE DESQ.nickname NOT IN(
+                    SELECT OWNS.nickname
+                    FROM rel_participate AS PART, rel_owns AS OWNS
+                    WHERE OWNS.title = NEW.gameTitle AND PART.teamName = NEW.teamName
+                    )
+                )
+            )
         )
         THEN SIGNAL SQLSTATE '42000'
-             SET MESSAGE_TEXT='Player must own all team games';
+             SET MESSAGE_TEXT='All players must owns the game';
         END IF;
     END;
-$$*/
 
 /**
  * TRIGGER: restriction_participate
@@ -161,7 +167,7 @@ BEGIN
                 )
            )
         THEN SIGNAL SQLSTATE '42000'
-             SET MESSAGE_TEXT='Player must own all team games';
+             SET MESSAGE_TEXT='Player must owns all team games';
         END IF;
     END;
 $$
