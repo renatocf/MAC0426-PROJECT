@@ -1,4 +1,10 @@
-USE evnsan;
+--USE evnsan;
+
+DELIMITER $$
+
+CREATE DATABASE IF NOT EXISTS gamestore;
+
+USE gamestore;
 
 CREATE TABLE gamer
 (
@@ -11,7 +17,7 @@ CREATE TABLE gamer
 
 CREATE TABLE team 
 (
-    name     varchar(40),
+    name    varchar(40),
     PRIMARY KEY(name)
 );
 
@@ -32,16 +38,16 @@ CREATE TABLE distributor
 
 CREATE TABLE challenge
 (
-    idChallenge BIGINT UNSIGNED,   
-    title varchar(40),
+    id       bigint unsigned,   
+    title    varchar(40),
     dat_beg  datetime,
     dat_end  datetime,
-    name varchar(40),
+    name     varchar(40),
+    PRIMARY KEY(id,title),
     FOREIGN KEY(title)
         REFERENCES game(title),
     FOREIGN KEY(name)
-        REFERENCES team(name),
-    PRIMARY KEY(name,idChallenge)
+        REFERENCES team(name)
 );
 
 CREATE TABLE rel_distribute
@@ -61,6 +67,16 @@ CREATE TABLE rel_owns
     FOREIGN KEY(nickname)
         REFERENCES gamer(nickname),
     FOREIGN KEY(title)
+        REFERENCES game(title)
+);
+
+CREATE TABLE rel_play
+(
+    teamName varchar(40),
+    gameTitle varchar(40),
+    FOREIGN KEY(teamName)
+        REFERENCES team(name),
+    FOREIGN KEY(gameTitle)
         REFERENCES game(title)
 );
 
@@ -87,34 +103,42 @@ CREATE TABLE rel_participate
         )
 );
 
-CREATE TABLE rel_play
-(
-    teamName varchar(40),
-    gameTitle varchar(40),
-    FOREIGN KEY(teamName)
-        REFERENCES team(name),
-    FOREIGN KEY(gameTitle)
-        REFERENCES game(title)
-);
+CREATE TRIGGER restriction_participate
+BEFORE INSERT ON rel_participate FOR EACH ROW
+BEGIN
+    IF
+        (SELECT teamName FROM rel_play AS PLAY
+            WHERE PLAY.teamName=teamName
+            AND PLAY.gameTitle NOT IN(
+                SELECT OWNS.title
+                FROM rel_owns AS OWNS
+                WHERE OWNS.nickname=nickname
+                )
+           )
+        THEN SIGNAL SQLSTATE '42000'
+             SET MESSAGE_TEXT='Player must own all team games';
+        END IF;
+    END;
+$$
 
 CREATE TABLE rel_dispute
 (
     teamName varchar(40),
     gameTitle varchar(40),
-    idChallenge varchar(40),    
+    idChallenge bigint unsigned,
     FOREIGN KEY(teamName)
         REFERENCES team(name),
-    FOREIGN KEY(gameTitle,idChallenge)
-        REFERENCES challenge(title,idChallenge)
+    FOREIGN KEY(idChallenge,gameTitle)
+        REFERENCES challenge(id,title)
 );
 
 CREATE TABLE rel_win
 (
     teamName varchar(40),
     gameTitle varchar(40),
-    idChallenge BIGINT UNSIGNED,
+    idChallenge bigint unsigned,
     FOREIGN KEY(teamName)
         REFERENCES team(name),
-    FOREIGN KEY(gameTitle,idChallenge)
-        REFERENCES challenge(title,idChallenge)
+    FOREIGN KEY(idChallenge,gameTitle)
+        REFERENCES challenge(id,title)
 );
