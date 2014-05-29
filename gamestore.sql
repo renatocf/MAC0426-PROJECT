@@ -1,6 +1,4 @@
---USE evnsan;
-
-DELIMITER $$
+/* USE evnsan; */
 
 CREATE DATABASE IF NOT EXISTS gamestore;
 
@@ -87,39 +85,8 @@ CREATE TABLE rel_participate
     FOREIGN KEY(nickname)
         REFERENCES gamer(nickname),
     FOREIGN KEY(teamName)
-        REFERENCES team(name),
-    CONSTRAINT own_any_game CHECK (
-        not teamName IN (
-            SELECT teamName
-            FROM rel_play AS PLAY
-            WHERE PLAY.teamName=teamName
-            AND PLAY.gameTitle NOT IN(
-                SELECT OWNS.title
-                FROM rel_owns AS OWNS
-                WHERE OWNS.nickname=nickname
-                )
-
-            )
-        )
+        REFERENCES team(name)
 );
-
-CREATE TRIGGER restriction_participate
-BEFORE INSERT ON rel_participate FOR EACH ROW
-BEGIN
-    IF
-        (SELECT teamName FROM rel_play AS PLAY
-            WHERE PLAY.teamName=teamName
-            AND PLAY.gameTitle NOT IN(
-                SELECT OWNS.title
-                FROM rel_owns AS OWNS
-                WHERE OWNS.nickname=nickname
-                )
-           )
-        THEN SIGNAL SQLSTATE '42000'
-             SET MESSAGE_TEXT='Player must own all team games';
-        END IF;
-    END;
-$$
 
 CREATE TABLE rel_dispute
 (
@@ -142,3 +109,61 @@ CREATE TABLE rel_win
     FOREIGN KEY(idChallenge,gameTitle)
         REFERENCES challenge(id,title)
 );
+
+/*
+//////////////////////////////////////////////////////////////
+-------------------------------------------------------------
+                           TRIGGERS
+-------------------------------------------------------------
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+*/ 
+
+DELIMITER $$
+
+/**
+ * TRIGGER: restriction_play
+ * Can only play a game if all players own it.
+ */
+/*CREATE TRIGGER restriction_play
+BEFORE INSERT ON rel_play FOR EACH ROW
+BEGIN
+    IF (SELECT HYPH.nickname 
+        FROM (SELECT PART.nickname,OWNS.title
+              FROM  rel_participate AS PART,rel_owns AS OWNS
+              WHERE PART.teamName=NEW.teamName
+                    AND OWNS.title=NEW.gametitle) AS HYPH
+        WHERE HYPH.nickname NOT IN 
+              (SELECT PART.nickname,OWNS.title
+               FROM  rel_participate AS PART,rel_owns AS OWNS
+               WHERE PART.teamName=NEW.teamName)
+        )
+        THEN SIGNAL SQLSTATE '42000'
+             SET MESSAGE_TEXT='Player must own all team games';
+        END IF;
+    END;
+$$*/
+
+/**
+ * TRIGGER: restriction_participate
+ * Avoid a player participating from a team if he
+ * does not have all the games played by the team.
+ */
+CREATE TRIGGER restriction_participate
+BEFORE INSERT ON rel_participate FOR EACH ROW
+BEGIN
+    IF NOT
+        (SELECT PLAY.teamName FROM rel_play AS PLAY
+            WHERE PLAY.teamName=NEW.teamName
+            AND PLAY.gameTitle NOT IN(
+                SELECT OWNS.title
+                FROM rel_owns AS OWNS
+                WHERE OWNS.nickname=NEW.nickname
+                )
+           )
+        THEN SIGNAL SQLSTATE '42000'
+             SET MESSAGE_TEXT='Player must own all team games';
+        END IF;
+    END;
+$$
+
+DELIMITER ;
