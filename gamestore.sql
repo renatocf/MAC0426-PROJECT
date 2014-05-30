@@ -149,6 +149,7 @@ BEGIN
              SET MESSAGE_TEXT='All players must own the game';
         END IF;
     END;
+$$
 
 /**
  * TRIGGER: restriction_participate
@@ -168,7 +169,47 @@ BEGIN
                 )
            )
         THEN SIGNAL SQLSTATE '31415'
-             SET MESSAGE_TEXT='Player must own all team games';
+             SET MESSAGE_TEXT = "Player NEW.nickname must own all team games";
+        END IF;
+    END;
+$$
+
+/**
+ * TRIGGER: restriction_dispute
+ * Avoid the team disputing a match if the team does
+ * not play the game of the match.
+ */
+CREATE TRIGGER restriction_dispute
+BEFORE INSERT ON rel_dispute FOR EACH ROW
+BEGIN
+    IF  (NEW.gameTitle NOT IN(
+                SELECT PLAY.gameTitle
+                FROM  rel_play AS PLAY
+                WHERE NEW.teamName=PLAY.teamName
+            )
+        )
+        THEN SIGNAL SQLSTATE '31415'
+             SET MESSAGE_TEXT = "Team must play this game";
+        END IF;
+    END;
+$$
+
+/**
+ * TRIGGER: restriction_win
+ * A team may only win a challenge disputed by this team
+ */
+CREATE TRIGGER restriction_win
+BEFORE INSERT ON rel_win FOR EACH ROW
+BEGIN
+    IF NOT (
+            SELECT DISPUTE.teamName
+            FROM  rel_dispute AS DISPUTE
+            WHERE NEW.teamName = DISPUTE.teamName
+              AND NEW.gameTitle = DISPUTE.gameTitle
+              AND NEW.idChallenge = DISPUTE.idChallenge
+        )
+        THEN SIGNAL SQLSTATE '31415'
+             SET MESSAGE_TEXT = "Team can only win a challenge it has disputed";
         END IF;
     END;
 $$
