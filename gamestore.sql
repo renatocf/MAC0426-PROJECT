@@ -1,8 +1,6 @@
-USE evnsan;
+CREATE DATABASE IF NOT EXISTS gamestore;
 
-/*CREATE DATABASE IF NOT EXISTS gamestore;
-
-USE gamestore;*/
+USE gamestore;
 
 CREATE TABLE gamer
 (
@@ -128,24 +126,35 @@ CREATE TRIGGER restriction_play
 BEFORE INSERT ON rel_play FOR EACH ROW
 BEGIN
     IF EXISTS(
-        SELECT A.nickname
-        FROM rel_participate AS A
-        WHERE A.nickname NOT IN(
-            SELECT A.nickname
-            FROM rel_participate AS A
-            WHERE A.nickname NOT IN(
-                SELECT DESQ.nickname
-                FROM rel_participate AS DESQ
-                WHERE DESQ.nickname NOT IN(
-                    SELECT OWNS.nickname
-                    FROM rel_participate AS PART, rel_owns AS OWNS
-                    WHERE OWNS.title = NEW.gameTitle AND PART.teamName = NEW.teamName
-                    )
-                )
+        -- SELECT A.nickname /*4*/
+        -- FROM  rel_participate AS A
+        -- WHERE A.nickname NOT IN(
+            -- SELECT A.nickname /*3*/
+            -- FROM  rel_participate AS A
+            -- WHERE A.nickname NOT IN(
+        SELECT DESQ.nickname /*2*/
+        FROM  rel_participate AS DESQ
+        WHERE DESQ.nickname NOT IN(
+            SELECT OWNS.nickname /*1*/
+            FROM  rel_participate AS PART,
+                  rel_owns AS OWNS
+            WHERE OWNS.title = NEW.gameTitle 
+                  AND PART.teamName = NEW.teamName
             )
         )
-        THEN SIGNAL SQLSTATE '42000'
-             SET MESSAGE_TEXT='All players must owns the game';
+            -- )
+        -- )
+        /* 
+         * Let A := rel_participate
+         *     B := rel_owns
+         * 1: Nicknames of the players of the team which 
+         *    have the title to be inserted (A ∩ B)
+         * 2: Nicknames of the players of the team wich 
+         *    does not have the title to be inserted
+         *    (A - A ∩ B)
+         */
+        THEN SIGNAL SQLSTATE '31415'
+             SET MESSAGE_TEXT='All players must own the game';
         END IF;
     END;
 
@@ -166,8 +175,8 @@ BEGIN
                 WHERE OWNS.nickname=NEW.nickname
                 )
            )
-        THEN SIGNAL SQLSTATE '42000'
-             SET MESSAGE_TEXT='Player must owns all team games';
+        THEN SIGNAL SQLSTATE '31415'
+             SET MESSAGE_TEXT='Player must own all team games';
         END IF;
     END;
 $$
