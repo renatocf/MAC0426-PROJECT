@@ -126,12 +126,6 @@ CREATE TRIGGER restriction_play
 BEFORE INSERT ON rel_play FOR EACH ROW
 BEGIN
     IF EXISTS(
-        -- SELECT A.nickname /*4*/
-        -- FROM  rel_participate AS A
-        -- WHERE A.nickname NOT IN(
-            -- SELECT A.nickname /*3*/
-            -- FROM  rel_participate AS A
-            -- WHERE A.nickname NOT IN(
         SELECT DESQ.nickname /*2*/
         FROM  rel_participate AS DESQ
         WHERE DESQ.nickname NOT IN(
@@ -142,8 +136,6 @@ BEGIN
                   AND PART.teamName = NEW.teamName
             )
         )
-            -- )
-        -- )
         /* 
          * Let A := rel_participate
          *     B := rel_owns
