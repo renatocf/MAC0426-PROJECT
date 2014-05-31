@@ -39,8 +39,8 @@ MODEL FOR GAME WEB SYSTEM
       | |- nickname (K)             | |    rel_has    N|  | |- dat_beg
       | |- card_num                 | |                |  | |- dat_end
       | '- password                 | |- title (K)     |  | '- id (K)
-      |                             | '- version       |  |  
-      | (restriction) (restriction) |                  |  |   
+      |                             | |- version       |  |  
+      | (restriction) (restriction) | '- price         |  |   
       | Must own any  Everyone must |                  |  | (0,N)
       |     game      own the game  |                  |  |
       |                             |     rel_dispute /\ /\ rel_wins 
