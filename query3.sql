@@ -18,6 +18,8 @@
 /*                                                            */
 /**************************************************************/
 
+USE gamestore;
+
 --
 -- QUERY: Check if all gamers of 'team1' have 'game4'
 --        (to 'team1' plays it)

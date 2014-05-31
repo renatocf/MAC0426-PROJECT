@@ -18,6 +18,8 @@
 /*                                                            */
 /**************************************************************/
 
+USE gamestore;
+
 DELETE FROM rel_win;
 DELETE FROM rel_play;
 DELETE FROM rel_participate;

@@ -18,6 +18,8 @@
 /*                                                            */
 /**************************************************************/
 
+USE gamestore;
+
 -- 
 -- QUERY: All the challenges won by `the1`, sorted by date
 -- 
