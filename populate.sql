@@ -18,55 +18,117 @@
 /*                                                            */
 /**************************************************************/
 
+-- 
+-- Sample database
+-- =======================
+-- 
+-- * 4 gamers
+-- |- gamer1
+-- |  |- 4 games: game1/game2/game3/game2
+-- |  '- 1 team:  team1/team3
+-- |- gamer2
+-- |  |- 3 games: game1/game2/game3
+-- |  '- 1 team:  team1
+-- |- gamer3
+-- |  |- 1 game: game2
+-- |  '- 1 team: team2
+-- '- gamer4
+--    |- 1 game: game2
+--    '- 1 team: team2
+-- 
+-- * 2 distributors
+-- |- company1
+-- |  '- 3 games: game1/game3/game5
+-- '- limited2
+--    '- 3 games: game2/game4/game6
+--
+-- * 3 teams
+-- |- team1
+-- |  '- 3 matches disputed
+-- |- team2
+-- |  '- 1 match disputed
+-- '- team3
+--    '- 0 matches disputed
+--
+
 -- gamer
 INSERT INTO gamer(name, nickname, card_num, password) VALUES
-('gamer1', 'the1', 5, 'jhadg'),
-('gamer2', 'the2', 5, 'jhadg'),
-('gamer3', 'the3', 5, 'jhadg');
+('gamer1', 'the1', 35897932, 'jhadg'),
+('gamer2', 'the2', 38462643, 'jhadg'),
+('gamer3', 'the3', 38327950, 'jhadg'),
+('gamer4', 'the4', 28841971, 'jhadg');
 
 -- team
 INSERT INTO team(name) VALUES
-('team1');
+('team1'),
+('team2'),
+('team2');
 
 -- game
-INSERT INTO game(title, version) VALUES
-('game1','v01'),
-('game2','v01'),
-('game3','v01'),
-('game4','v01'),
-('game5','v01'),
-('game6','v01');
+INSERT INTO game(title, version, price) VALUES
+('game1','v01.0',   5),
+('game2','v03.5',  10),
+('game3','v02.3',  15),
+('game4','v01.7',  12),
+('game5','v00.9',  15),
+('game6','v01.2', 100);
 
 -- distributor
+INSERT INTO distributor(name,fantasy,cnpj) VALUES
+('company1','first and brothers co.',314159265),
+('limited2','second and sons lmtd.',271828182);
 
 -- challenge
--- INSERT INTO challenge(1,'game4',)
+INSERT INTO challenge(gameTitle,dat_beg,dat_end) VALUES
+('game1','2014-01-06 22:44:35','2014-01-07 02:03:15'),
+('game2','2014-05-10 18:00:17','2014-05-12 19:30:53'),
+('game3','2014-05-11 09:15:21','2014-05-11 09:17:35');
 
--- rel_distributes
+-- rel_distribute
+INSERT INTO rel_distribute(cnpj,gameTitle) VALUES
+(314159265,'game1'),
+(314159265,'game3'),
+(314159265,'game5'),
+(271828182,'game2'),
+(271828182,'game4'),
+(271828182,'game6');
 
 -- rel_owns
-INSERT INTO rel_owns(nickname, title) VALUES
+INSERT INTO rel_owns(nickname, gameTitle) VALUES
 ('the1', 'game1'),
 ('the1', 'game2'),
 ('the1', 'game3'),
 ('the1', 'game4'),
 ('the2', 'game1'),
 ('the2', 'game2'),
-('the2', 'game3');
+('the2', 'game3'),
+('the3', 'game2'),
+('the4', 'game2');
 
 -- rel_play
 INSERT INTO rel_play(teamName, gameTitle) VALUES
 ('team1', 'game1'),
 ('team1', 'game2'),
-('team1', 'game3');
+('team1', 'game3'),
+('team2', 'game2'),
+('team3', 'game1');
 
 -- rel_participate
 INSERT INTO rel_participate(nickname,teamName) VALUES
 ('the1', 'team1'),
-('the2', 'team1');
+('the1', 'team3'),
+('the2', 'team1'),
+('the3', 'team2'),
+('the4', 'team2');
 
 -- rel_dispute
--- INSERT INTO rel_dispute(teamName,gameTitle,idChallenge) VALUES
--- ('team1','game4',1);
+INSERT INTO rel_dispute(teamName,gameTitle,idChallenge) VALUES
+('team1','game1',1),
+('team1','game2',2),
+('team2','game2',2),
+('team1','game3',3);
 
 -- rel_win
+INSERT INTO rel_win(teamName,gameTitle,idChallenge) VALUES
+('team1','game1',1),
+('team2','game2',2);
