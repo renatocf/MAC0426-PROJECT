@@ -1,8 +1,36 @@
+/**************************************************************/
+/*                                                            */
+/* Copyright 2014 MAC0426-PROJECT                             */
+/*                                                            */
+/* Licensed under the Apache License, Version 2.0             */
+/* (the "License"); you may not use this file except in       */
+/* compliance with the License. You may obtain a copy of the  */
+/* License at                                                 */
+/*                                                            */
+/*     http://www.apache.org/licenses/LICENSE-2.0             */
+/*                                                            */
+/* Unless required by applicable law or agreed to in writing, */
+/* software distributed under the License is distributed on   */
+/* an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY  */
+/* KIND, either express or implied.                           */
+/* See the License for the specific language governing        */
+/* permissions and limitations under the License.             */
+/*                                                            */
+/**************************************************************/
+
 CREATE DATABASE IF NOT EXISTS gamestore;
 
 USE gamestore;
 
-CREATE TABLE gamer
+/*
+//////////////////////////////////////////////////////////////
+-------------------------------------------------------------
+                           ENTITIES
+-------------------------------------------------------------
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+*/ 
+
+CREATE TABLE IF NOT EXISTS gamer
 (
     name     varchar(255),
     nickname varchar(10),
@@ -11,20 +39,20 @@ CREATE TABLE gamer
     PRIMARY KEY(nickname)
 );
 
-CREATE TABLE team 
+CREATE TABLE IF NOT EXISTS team 
 (
     name    varchar(40),
     PRIMARY KEY(name)
 );
 
-CREATE TABLE game
+CREATE TABLE IF NOT EXISTS game
 (
     title    varchar(40),
     version  varchar(10),
     PRIMARY KEY(title)
 );
 
-CREATE TABLE distributor
+CREATE TABLE IF NOT EXISTS distributor
 (
     name     varchar(255),
     fantasy  varchar(255),
@@ -32,7 +60,7 @@ CREATE TABLE distributor
     PRIMARY KEY(cnpj)
 );
 
-CREATE TABLE challenge
+CREATE TABLE IF NOT EXISTS challenge
 (
     id       bigint unsigned,   
     title    varchar(40),
@@ -40,68 +68,83 @@ CREATE TABLE challenge
     dat_end  datetime,
     name     varchar(40),
     PRIMARY KEY(id,title),
+    
     FOREIGN KEY(title)
         REFERENCES game(title),
     FOREIGN KEY(name)
         REFERENCES team(name)
 );
 
-CREATE TABLE rel_distribute
+/*
+//////////////////////////////////////////////////////////////
+-------------------------------------------------------------
+                        RELATIONSHIPS
+-------------------------------------------------------------
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+*/ 
+
+CREATE TABLE IF NOT EXISTS rel_distribute
 (
-    cnpj int unsigned,
+    cnpj  int unsigned,
     title varchar(40),
+    
     FOREIGN KEY(cnpj)
         REFERENCES distributor(cnpj),
     FOREIGN KEY(title)
         REFERENCES game(title)
 );
 
-CREATE TABLE rel_owns
+CREATE TABLE IF NOT EXISTS rel_owns
 (
     nickname varchar(10),
-    title varchar(40),
+    title    varchar(40),
+    
     FOREIGN KEY(nickname)
         REFERENCES gamer(nickname),
     FOREIGN KEY(title)
         REFERENCES game(title)
 );
 
-CREATE TABLE rel_play
+CREATE TABLE IF NOT EXISTS rel_play
 (
-    teamName varchar(40),
+    teamName  varchar(40),
     gameTitle varchar(40),
+    
     FOREIGN KEY(teamName)
         REFERENCES team(name),
     FOREIGN KEY(gameTitle)
         REFERENCES game(title)
 );
 
-CREATE TABLE rel_participate
+CREATE TABLE IF NOT EXISTS rel_participate
 (
     nickname varchar(10),
     teamName varchar(40),
+    
     FOREIGN KEY(nickname)
         REFERENCES gamer(nickname),
     FOREIGN KEY(teamName)
         REFERENCES team(name)
 );
 
-CREATE TABLE rel_dispute
+CREATE TABLE IF NOT EXISTS rel_dispute
 (
-    teamName varchar(40),
-    gameTitle varchar(40),
+    teamName    varchar(40),
+    gameTitle   varchar(40),
     idChallenge bigint unsigned,
+    
     FOREIGN KEY(teamName)
         REFERENCES team(name),
     FOREIGN KEY(idChallenge,gameTitle)
         REFERENCES challenge(id,title)
 );
 
-CREATE TABLE rel_win
+CREATE TABLE IF NOT EXISTS rel_win
 (
-    teamName varchar(40),
-    gameTitle varchar(40),
+    teamName    varchar(40),
+    gameTitle   varchar(40),
     idChallenge bigint unsigned,
+    
     FOREIGN KEY(teamName)
         REFERENCES team(name),
     FOREIGN KEY(idChallenge,gameTitle)
@@ -146,7 +189,8 @@ BEGIN
          *    (A - A ∩ B)
          */
         THEN SIGNAL SQLSTATE '31415'
-             SET MESSAGE_TEXT='All players must own the game';
+             SET MESSAGE_TEXT = 
+             'All players must own the game';
         END IF;
     END;
 $$
@@ -169,7 +213,8 @@ BEGIN
                 )
            )
         THEN SIGNAL SQLSTATE '31415'
-             SET MESSAGE_TEXT = "Player NEW.nickname must own all team games";
+             SET MESSAGE_TEXT = 
+             'Player must own all team games';
         END IF;
     END;
 $$
@@ -189,7 +234,8 @@ BEGIN
             )
         )
         THEN SIGNAL SQLSTATE '31415'
-             SET MESSAGE_TEXT = "Team must play this game";
+             SET MESSAGE_TEXT = 
+             'Team must play this game';
         END IF;
     END;
 $$
@@ -209,7 +255,8 @@ BEGIN
               AND NEW.idChallenge = DISPUTE.idChallenge
         )
         THEN SIGNAL SQLSTATE '31415'
-             SET MESSAGE_TEXT = "Team can only win a challenge it has disputed";
+             SET MESSAGE_TEXT = 
+             'Team can only win a challenge it has disputed';
         END IF;
     END;
 $$
