@@ -17,33 +17,56 @@
 #                                                                      #
 ########################################################################
 
-MODELO PARA JOGOS
-===================
-    
-                                     .----------.
-                                     | PRODUCER |
-                                     '----------'
-                                         N|
-                                          |
-                                         /\ rel_produces
-                  rel_owns               \/
-        .-----|~|---/\----------------.   |
-        |           \/                |   |
-        |M                           N|  M|
-    .--------.                     .--------.N 
-    |  USER  |                     |  GAME  |
-    '--------'                     '--------'  
-       M|                              N|      
-        | (restrição)    (restrição)    |      
-        | Deve possuir   Todos devem    |      
-        |  algum jogo    ter o jogo     |      
-        |                          .----:-----.
-        |      N.--------.M        |    |     |  
-       /\--|~|--|  TEAM  |--|~|----:----/\    |
-       \/       '--------'         |    \/    |
-    rel_participate  |1            | rel_play |
-                     |             '----------'
-                     |              N| MATCH
-                     '------/\-------'
-                            \/ 
-                         rel_wins
+## ENTITIES ##
+
+gamer
+| name | nickname | card_num | password |
+         ^^^^^^^^
+team
+| name |
+  ^^^^  
+
+game
+| title | version |
+  ^^^^^
+
+distributor
+| name | fantasy | cnpj |
+                   ^^^^
+
+challenge
+         fk                         fk
+| ID | TITLE | DAT_BEG | DAT_END | NAME |
+  ^^   ^^^^^   
+
+## RELATIONSHIPS ##
+
+rel_distribute
+   fk      fk
+| cnpj | title |
+  ^^^^   ^^^^^
+
+rel_play
+     fk         fk
+| teamName | gameTitle |
+  ^^^^^^^^   ^^^^^^^^^
+
+rel_owns
+     fk        fk
+| nickname | title |
+  ^^^^^^^^   ^^^^^
+
+rel_participate
+     fk         fk
+| nickname | teamName |
+  ^^^^^^^^   ^^^^^^^^
+
+rel_dispute
+     fk          fk          fk
+| teamName | gameTitle | idChallenge |
+  ^^^^^^^^   ^^^^^^^^^   ^^^^^^^^^^^ 
+
+rel_win
+     fk          fk          fk
+| teamName | gameTitle | idChallenge |
+  ^^^^^^^^   ^^^^^^^^^   ^^^^^^^^^^^
