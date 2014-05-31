@@ -68,4 +68,13 @@ Este projeto é composto dos seguintes arquivos:
 * **README.md**  
     Este arquivo de documentação
 
+**Observação**:
+
+Uma *trigger* extra, especial, foi implementada para 
+manter a relação 1:N *rel\_win* com a aridade do modelo
+conceitual. Este relacionamento foi implementado como 
+um relacionamento M:N, e o Banco pode ser facilmente 
+extendido para aceitar alianças entre equipes (o que
+permitiria múltiplos times vitoriosos).
+
 [1]: http://dev.mysql.com/
