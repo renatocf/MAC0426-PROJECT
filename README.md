@@ -68,4 +68,4 @@ Este projeto é composto dos seguintes arquivos:
 * **README.md**  
     Este arquivo de documentação
 
-[1] http://dev.mysql.com/
+[1]: http://dev.mysql.com/
