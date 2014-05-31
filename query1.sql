@@ -19,7 +19,7 @@
 /**************************************************************/
 
 -- 
--- QUERY: All the matches won by `the1`, sorted by date
+-- QUERY: All the challenges won by `the1`, sorted by date
 -- 
 -- Relational Algebra:
 -- The1_Teams      ← σ_nickname='the1' (rel_participate)
