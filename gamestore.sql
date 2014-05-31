@@ -170,20 +170,15 @@ BEGIN
     IF EXISTS (
             SELECT DESQ.nickname /*2*/
             FROM   rel_participate AS DESQ
-            WHERE  DESQ.nickname NOT IN (
+            WHERE  DESQ.teamName = NEW.teamName
+              AND  DESQ.nickname NOT IN (
                        SELECT OWNS.nickname /*1*/
                        FROM   rel_participate AS PART,
                               rel_owns AS OWNS
-                       WHERE  OWNS.gameTitle = NEW.gameTitle 
-                         AND  PART.teamName = NEW.teamName)
+                       WHERE  PART.teamName = NEW.teamName
+                         AND  OWNS.gameTitle = NEW.gameTitle 
+                         AND  OWNS.nickname = PART.nickname)
         )
-        -- Let A := rel_participate
-        --     B := rel_owns
-        -- 1: Nicknames of the players of the team which 
-        --    have the title to be inserted (A ∩ B)
-        -- 2: Nicknames of the players of the team wich 
-        --    does not have the title to be inserted
-        --    (A - A ∩ B)
         THEN SIGNAL SQLSTATE '31415'
              SET MESSAGE_TEXT = 
              'All players must own the game';
