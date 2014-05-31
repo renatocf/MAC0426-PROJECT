@@ -29,5 +29,11 @@ INSERT INTO rel_participate(nickname,teamName) VALUES
 ('the3', 'team1');
 
 -- Error: restriction_dispute
+INSERT INTO rel_dispute(teamName,gameTitle,idChallenge) VALUES
+('team2','game1',1);
 
 -- Error: restriction_win
+INSERT INTO rel_win(teamName,gameTitle,idChallenge) VALUES
+('team2','game1',1);
+INSERT INTO rel_win(teamName,gameTitle,idChallenge) VALUES
+('team1','game2',1);
