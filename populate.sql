@@ -55,10 +55,10 @@ USE gamestore;
 
 -- 1: gamer
 INSERT INTO gamer(name, nickname, card_num, password) VALUES
-('gamer1', 'the1', 35897932, 'jhadg'),
-('gamer2', 'the2', 38462643, 'jhadg'),
-('gamer3', 'the3', 38327950, 'jhadg'),
-('gamer4', 'the4', 28841971, 'jhadg');
+('gamer1', 'the1', 35897932, 'Trantor'),
+('gamer2', 'the2', 38462643, 'Terminus'),
+('gamer3', 'the3', 38327950, 'Helicon'),
+('gamer4', 'the4', 28841971, 'Gaia');
 
 -- 2: team
 INSERT INTO team(name) VALUES
