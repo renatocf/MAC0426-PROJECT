@@ -24,27 +24,28 @@ MODEL FOR GAME WEB SYSTEM
                                | DISTRIBUTOR |
                                '-------------'
                                      N| |- name
-                                      | '- CNPJ
+                                      | |- fantasy
+                                      | '- CNPJ (K)
                                       |
                                       /\ rel_distributes
                 rel_owns              \/
       .-----|~|---/\--------------.   ||
       |           \/              |   ||
-      |M                         N|  M||           ...........
-  .--------.                   .--------.1   /\   N|.-------.|
-  |  USER  |                   |  GAME  |---//\\---|| MATCH ||.
-  '--------'                   '--------'   \\//   |'-------'||- dat_ini
-     M| |- name                    N|        \/    '''''''''''|- dat_fim
-      | |- "nickname"               |      rel_has    N|  |   '- "id_match"
-      | |- card_num                 |                  |  |
-      | '- password                 |                  |  |
-      |                             |                  |  |
+      |M                         N|  M||           ...............
+  .---------.                  .--------.1   /\   N|.-----------.|
+  |  GAMER  |                  |  GAME  |---//\\---|| CHALLENGE ||
+  '---------'                  '--------'   \\//   |'-----------'|
+     M| |- name                    N| |      \/    '''''''''''''''
+      | |- nickname (K)             | |    rel_has    N|  | |- dat_beg
+      | |- card_num                 | |                |  | |- dat_end
+      | '- password                 | |- title (K)     |  | '- id (K)
+      |                             | '- version       |  |  
       | (restriction) (restriction) |                  |  |   
       | Must own any  Everyone must |                  |  | (0,N)
       |     game      own the game  |                  |  |
       |                             |     rel_dispute /\ /\ rel_wins 
       |                             |                 \/ \/
-      |        .- name              |                  |  | (0,1)
+      |        .- name (K)          |                  |  | (0,1)
       |      N.--------.M           |                  |  |
      /\--|~|--|  TEAM  |----|~|----/\                  |  |
      \/       '--------'           \/                  |  |
