@@ -161,10 +161,10 @@ CREATE TABLE IF NOT EXISTS rel_win
 
 DELIMITER $$
 
-/**
- * TRIGGER: restriction_play
- * Can only play a game if all players own it.
- */
+-- 
+-- TRIGGER: restriction_play
+-- Can only play a game if all players own it.
+-- 
 CREATE TRIGGER restriction_play
 BEFORE INSERT ON rel_play FOR EACH ROW
 BEGIN
@@ -179,15 +179,13 @@ BEGIN
                   AND PART.teamName = NEW.teamName
             )
         )
-        /* 
-         * Let A := rel_participate
-         *     B := rel_owns
-         * 1: Nicknames of the players of the team which 
-         *    have the title to be inserted (A ∩ B)
-         * 2: Nicknames of the players of the team wich 
-         *    does not have the title to be inserted
-         *    (A - A ∩ B)
-         */
+        -- Let A := rel_participate
+        --     B := rel_owns
+        -- 1: Nicknames of the players of the team which 
+        --    have the title to be inserted (A ∩ B)
+        -- 2: Nicknames of the players of the team wich 
+        --    does not have the title to be inserted
+        --    (A - A ∩ B)
         THEN SIGNAL SQLSTATE '31415'
              SET MESSAGE_TEXT = 
              'All players must own the game';
@@ -195,11 +193,11 @@ BEGIN
     END;
 $$
 
-/**
- * TRIGGER: restriction_participate
- * Avoid a player participating from a team if he
- * does not have all the games played by the team.
- */
+--
+-- TRIGGER: restriction_participate
+-- Avoid a player participating from a team if he
+-- does not have all the games played by the team.
+--
 CREATE TRIGGER restriction_participate
 BEFORE INSERT ON rel_participate FOR EACH ROW
 BEGIN
@@ -212,18 +210,18 @@ BEGIN
                 WHERE OWNS.nickname=NEW.nickname
                 )
            )
-        THEN SIGNAL SQLSTATE '31415'
+        THEN SIGNAL SQLSTATE '27182'
              SET MESSAGE_TEXT = 
              'Player must own all team games';
         END IF;
     END;
 $$
 
-/**
- * TRIGGER: restriction_dispute
- * Avoid the team disputing a match if the team does
- * not play the game of the match.
- */
+-- 
+-- TRIGGER: restriction_dispute
+-- Avoid the team disputing a match if the team does
+-- not play the game of the match.
+-- 
 CREATE TRIGGER restriction_dispute
 BEFORE INSERT ON rel_dispute FOR EACH ROW
 BEGIN
@@ -233,17 +231,17 @@ BEGIN
                 WHERE NEW.teamName=PLAY.teamName
             )
         )
-        THEN SIGNAL SQLSTATE '31415'
+        THEN SIGNAL SQLSTATE '17320'
              SET MESSAGE_TEXT = 
              'Team must play this game';
         END IF;
     END;
 $$
 
-/**
- * TRIGGER: restriction_win
- * A team may only win a challenge disputed by this team
- */
+-- 
+-- TRIGGER: restriction_win
+-- A team may only win a challenge disputed by this team
+-- 
 CREATE TRIGGER restriction_win
 BEFORE INSERT ON rel_win FOR EACH ROW
 BEGIN
@@ -254,7 +252,7 @@ BEGIN
               AND NEW.gameTitle = DISPUTE.gameTitle
               AND NEW.idChallenge = DISPUTE.idChallenge
         )
-        THEN SIGNAL SQLSTATE '31415'
+        THEN SIGNAL SQLSTATE '14142'
              SET MESSAGE_TEXT = 
              'Team can only win a challenge it has disputed';
         END IF;
